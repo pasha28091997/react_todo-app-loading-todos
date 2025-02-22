@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { UserWarning } from './UserWarning';
 import { getTodos, USER_ID } from './api/todos';
 import { Todo } from './types/Todo';
+import { Header } from './Components/Header';
+import { TodoList } from './Components/TodoList';
+import { Footer } from './Components/Footer';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -63,43 +66,15 @@ export const App: React.FC = () => {
     setFilter(newFilter);
   };
 
-  const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => (
-    <div data-cy="Todo" className={`todo ${todo.completed ? 'completed' : ''}`}>
-      <label className="todo__status-label">
-        <input
-          data-cy="TodoStatus"
-          type="checkbox"
-          className="todo__status"
-          checked={todo.completed}
-          readOnly
-        />
-      </label>
+  const hasCompleted = todos.some(todo => todo.completed);
 
-      <span data-cy="TodoTitle" className="todo__title">
-        {todo.title}
-      </span>
-
-      {/* Remove button appears only on hover
-            Кнопка «Удалить» появляется только при наведении */}
-      <button type="button" className="todo__remove" data-cy="TodoDelete">
-        ×
-      </button>
-
-      {/* overlay will cover the todo while it is being deleted or updated
-            наложение будет покрывать задачу,
-            пока она удаляется или обновляется */}
-      <div data-cy="TodoLoader" className="modal overlay">
-        <div className="modal-background has-background-white-ter" />
-        <div className="loader" />
-        {loading}
-      </div>
-    </div>
-  );
+  const onClearCompleted = () => {
+    setTodos(todos.filter(todo => !todo.completed));
+  };
 
   return (
     <div className="todoapp">
       <h1 className="todoapp__title">todos</h1>
-
       <div
         data-cy="ErrorNotification"
         className={`notification is-danger is-light has-text-weight-normal ${error ? '' : 'hidden'}`}
@@ -114,98 +89,25 @@ export const App: React.FC = () => {
         показывать только одно сообщение за раз */}
         {error || 'No error'}
       </div>
-
       {loading && <p>Loading todos...</p>}
-
       <div className="todoapp__content">
-        <header className="todoapp__header">
-          {/* this button should have `active` class only if all todos are completed
-            эта кнопка должна иметь класс «active»,
-            только если все задачи выполнены. */}
-          <button
-            type="button"
-            className={`todoapp__toggle-all ${todos.length > 0 && todos.every(todo => todo.completed) ? 'active' : ''}`}
-            data-cy="ToggleAllButton"
-          />
-
-          {/*Add a todo on form submit
-          Добавить задачу при отправке формы */}
-          <form>
-            <input
-              data-cy="NewTodoField"
-              type="text"
-              className="todoapp__new-todo"
-              placeholder="What needs to be done?"
-            />
-          </form>
-        </header>
-
+        <Header todos={todos} />
         {todos.length > 0 && (
-          <section className="todoapp__main" data-cy="TodoList">
-            {loading ? (
-              <p>Loading todos...</p>
-            ) : (
-              // eslint-disable-next-line prettier/prettier
-              filteredTodos.map(todo => (
-                <TodoItem key={todo.id} todo={todo} />
-              ))
-            )}
-          </section>
+          <TodoList filteredTodos={filteredTodos} loading={loading} />
         )}
-
         {/* Hide the footer if there are no todos
         Скрыть нижний колонтитул, если задач нет */}
         {todos.length > 0 && (
-          <footer className="todoapp__footer" data-cy="Footer">
-            <span className="todo-count" data-cy="TodosCounter">
-              {activeCount} items left
-            </span>
-
-            {/* Active link should have the 'selected' class
-            Активная ссылка должна иметь класс «выбранный». */}
-            <nav className="filter" data-cy="Filter">
-              <a
-                href="#/"
-                className={`filter__link ${filter === 'all' ? 'selected' : ''}`}
-                data-cy="FilterLinkAll"
-                onClick={() => handleFilterChenge('all')}
-              >
-                All
-              </a>
-
-              <a
-                href="#/active"
-                className={`filter__link ${filter === 'active' ? 'selected' : ''}`}
-                data-cy="FilterLinkActive"
-                onClick={() => handleFilterChenge('active')}
-              >
-                Active
-              </a>
-
-              <a
-                href="#/completed"
-                className={`filter__link ${filter === 'completed' ? 'selected' : ''}`}
-                data-cy="FilterLinkCompleted"
-                onClick={() => handleFilterChenge('completed')}
-              >
-                Completed
-              </a>
-            </nav>
-
-            {/* this button should be disabled if there are no completed todos
-            эту кнопку следует отключить, если нет завершенных задач */}
-            <button
-              type="button"
-              className="todoapp__clear-completed"
-              data-cy="ClearCompletedButton"
-              disabled={todos.filter(todo => todo.completed).length === 0}
-            >
-              Clear completed
-            </button>
-          </footer>
+          <Footer
+            activeCount={activeCount}
+            filter={filter}
+            hasCompleted={hasCompleted}
+            handleFilterChenge={handleFilterChenge}
+            // eslint-disable-next-line max-len
+            onClearCompleted={onClearCompleted}
+          />
         )}
       </div>
-
       {/* DON'T use conditional rendering to hide the notification
       НЕ используйте условный рендеринг, чтобы скрыть уведомление. */}
       {/* Add the 'hidden' class to hide the message smoothly
