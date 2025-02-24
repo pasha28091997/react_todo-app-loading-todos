@@ -81,11 +81,6 @@ export const App: React.FC = () => {
     setTodos(todos.filter(todo => !todo.completed));
   };
 
-  const onDelete = (id: Todo['id']) => {
-    deleteTodo(id);
-    setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -113,6 +108,11 @@ export const App: React.FC = () => {
       });
   };
 
+  const onDelete = (id: Todo['id']) => {
+    deleteTodo(id);
+    setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+  };
+
   const toggleTodo = (id: number) => {
     const currentTodo = todos.find(todo => todo.id === id);
 
@@ -135,6 +135,17 @@ export const App: React.FC = () => {
       });
   };
 
+  const onToggleAll = () => {
+    setTodos(prevTodos => {
+      const allCompleted = prevTodos.every(todo => todo.completed);
+
+      return prevTodos.map(todo => ({
+        ...todo,
+        completed: !allCompleted,
+      }));
+    });
+  };
+
   return (
     <div className="todoapp">
       <h1 className="todoapp__title">todos</h1>
@@ -152,6 +163,7 @@ export const App: React.FC = () => {
           setTitle={setTitle}
           setError={setError}
           handleSubmit={handleSubmit}
+          onToggleAll={onToggleAll}
         />
         {todos.length > 0 && (
           <TodoList

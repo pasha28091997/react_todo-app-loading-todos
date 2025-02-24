@@ -20,7 +20,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           data-cy="TodoStatus"
           type="checkbox"
           className="todo__status"
-          id={`todo-status-${id}`}
+          // id={`todo-status-${id}`}
           checked={completed}
           onChange={() => onToggle(id)}
         />

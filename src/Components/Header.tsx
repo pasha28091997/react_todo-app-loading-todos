@@ -5,6 +5,7 @@ type HeaderProps = {
   title: string;
   setTitle: (value: string) => void;
   setError: (value: string | null) => void;
+  onToggleAll: () => void;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
@@ -14,6 +15,7 @@ export const Header: React.FC<HeaderProps> = ({
   setTitle,
   setError,
   handleSubmit,
+  onToggleAll,
 }) => {
   const areAllTodosCompleted =
     todos.length > 0 && todos.every(todo => todo.completed);
@@ -27,6 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
         type="button"
         className={`todoapp__toggle-all ${areAllTodosCompleted ? 'active' : ''}`}
         data-cy="ToggleAllButton"
+        onClick={onToggleAll}
       />
 
       {/*Add a todo on form submit
