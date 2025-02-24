@@ -15,6 +15,9 @@ export const Header: React.FC<HeaderProps> = ({
   setError,
   handleSubmit,
 }) => {
+  const areAllTodosCompleted =
+    todos.length > 0 && todos.every(todo => todo.completed);
+
   return (
     <header className="todoapp__header">
       {/* this button should have `active` class only if all todos are completed
@@ -22,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
                 только если все задачи выполнены. */}
       <button
         type="button"
-        className={`todoapp__toggle-all ${todos.length > 0 && todos.every(todo => todo.completed) ? 'active' : ''}`}
+        className={`todoapp__toggle-all ${areAllTodosCompleted ? 'active' : ''}`}
         data-cy="ToggleAllButton"
       />
 

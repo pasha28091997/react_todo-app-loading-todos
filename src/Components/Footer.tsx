@@ -1,5 +1,6 @@
 import React from 'react';
 import { FilterType } from '../types/FilterType';
+import classNames from 'classnames';
 
 type FooterProps = {
   activeCount: number;
@@ -15,51 +16,47 @@ export const Footer: React.FC<FooterProps> = ({
   handleFilterChange: handleFilterChange,
   onClearCompleted,
   hasCompleted,
-}) => (
-  <footer className="todoapp__footer" data-cy="Footer">
-    <span className="todo-count" data-cy="TodosCounter">
-      {activeCount} items left
-    </span>
-    <nav className="filter" data-cy="Filter">
-      <a
-        href="#/"
-        className={`filter__link ${filter === 'all' ? 'selected' : ''}`}
-        data-cy="FilterLinkAll"
-        onClick={() => handleFilterChange('all')}
-      >
-        All
-      </a>
+}) => {
+  const filterOption = Object.values(FilterType);
 
-      <a
-        href="#/active"
-        className={`filter__link ${filter === 'active' ? 'selected' : ''}`}
-        data-cy="FilterLinkActive"
-        onClick={() => handleFilterChange('active')}
-      >
-        Active
-      </a>
+  return (
+    <footer className="todoapp__footer" data-cy="Footer">
+      <span className="todo-count" data-cy="TodosCounter">
+        {activeCount} items left
+      </span>
 
-      <a
-        href="#/completed"
-        className={`filter__link ${filter === 'completed' ? 'selected' : ''}`}
-        data-cy="FilterLinkCompleted"
-        onClick={() => handleFilterChange('completed')}
-      >
-        Completed
-      </a>
-    </nav>
+      <nav className="filter" data-cy="Filter">
+        {filterOption.map(option => {
+          const label = option.charAt(0).toUpperCase() + option.slice(1);
 
-    {/* this button should be disabled if there are no completed todos
+          return (
+            <a
+              key={option}
+              href={`#/${option}`}
+              className={classNames('filter__link', {
+                selected: filter === option,
+              })}
+              data-cy={`FilterLink${label}`}
+              onClick={() => handleFilterChange(option)}
+            >
+              {label}
+            </a>
+          );
+        })}
+      </nav>
+
+      {/* this button should be disabled if there are no completed todos
             эту кнопку следует отключить, если нет завершенных задач */}
-    {hasCompleted && (
-      <button
-        type="button"
-        className="todoapp__clear-completed"
-        data-cy="ClearCompletedButton"
-        onClick={onClearCompleted}
-      >
-        Clear completed
-      </button>
-    )}
-  </footer>
-);
+      {hasCompleted && (
+        <button
+          type="button"
+          className="todoapp__clear-completed"
+          data-cy="ClearCompletedButton"
+          onClick={onClearCompleted}
+        >
+          Clear completed
+        </button>
+      )}
+    </footer>
+  );
+};

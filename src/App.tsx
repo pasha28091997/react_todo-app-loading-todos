@@ -21,7 +21,7 @@ export const App: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<FilterType>('all');
+  const [filter, setFilter] = useState<FilterType>(FilterType.All);
 
   useEffect(() => {
     if (!USER_ID) {
@@ -59,11 +59,11 @@ export const App: React.FC = () => {
   }
 
   const filteredTodos = todos.filter(todo => {
-    if (filter === 'active') {
+    if (filter === FilterType.Active) {
       return !todo.completed;
     }
 
-    if (filter === 'completed') {
+    if (filter === FilterType.Completed) {
       return todo.completed;
     }
 

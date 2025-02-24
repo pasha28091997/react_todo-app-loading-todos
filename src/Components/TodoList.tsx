@@ -19,8 +19,14 @@ export const TodoList: React.FC<TodoListProps> = ({
     {loading ? (
       <p>Loading todos...</p>
     ) : (
-      // eslint-disable-next-line prettier/prettier, max-len
-      filteredTodos.map(todo => <TodoItem key={todo.id} todo={todo} onDelete={onDelete} onToggle={onToggle} />)
+      filteredTodos.map(todo => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onDelete={onDelete}
+          onToggle={onToggle}
+        />
+      ))
     )}
   </section>
 );
