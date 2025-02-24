@@ -1,6 +1,20 @@
 import { Todo } from '../types/Todo';
 
-export const Header: React.FC<{ todos: Todo[] }> = ({ todos }) => {
+type HeaderProps = {
+  todos: Todo[];
+  title: string;
+  setTitle: (value: string) => void;
+  setError: (value: string | null) => void;
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+};
+
+export const Header: React.FC<HeaderProps> = ({
+  todos,
+  title,
+  setTitle,
+  setError,
+  handleSubmit,
+}) => {
   return (
     <header className="todoapp__header">
       {/* this button should have `active` class only if all todos are completed
@@ -14,8 +28,14 @@ export const Header: React.FC<{ todos: Todo[] }> = ({ todos }) => {
 
       {/*Add a todo on form submit
               Добавить задачу при отправке формы */}
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
+          autoFocus
+          value={title}
+          onChange={e => {
+            setTitle(e.target.value);
+            setError(null);
+          }}
           data-cy="NewTodoField"
           type="text"
           className="todoapp__new-todo"

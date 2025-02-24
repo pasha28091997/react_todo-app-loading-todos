@@ -1,9 +1,10 @@
 import React from 'react';
+import { FilterType } from '../types/FilterType';
 
 type FooterProps = {
   activeCount: number;
-  filter: 'all' | 'active' | 'completed';
-  handleFilterChenge: (newFilter: 'all' | 'active' | 'completed') => void;
+  filter: FilterType;
+  handleFilterChange: (newFilter: FilterType) => void;
   onClearCompleted: () => void;
   hasCompleted: boolean;
 };
@@ -11,7 +12,7 @@ type FooterProps = {
 export const Footer: React.FC<FooterProps> = ({
   activeCount,
   filter,
-  handleFilterChenge,
+  handleFilterChange: handleFilterChange,
   onClearCompleted,
   hasCompleted,
 }) => (
@@ -19,15 +20,12 @@ export const Footer: React.FC<FooterProps> = ({
     <span className="todo-count" data-cy="TodosCounter">
       {activeCount} items left
     </span>
-
-    {/* Active link should have the 'selected' class
-            Активная ссылка должна иметь класс «выбранный». */}
     <nav className="filter" data-cy="Filter">
       <a
         href="#/"
         className={`filter__link ${filter === 'all' ? 'selected' : ''}`}
         data-cy="FilterLinkAll"
-        onClick={() => handleFilterChenge('all')}
+        onClick={() => handleFilterChange('all')}
       >
         All
       </a>
@@ -36,7 +34,7 @@ export const Footer: React.FC<FooterProps> = ({
         href="#/active"
         className={`filter__link ${filter === 'active' ? 'selected' : ''}`}
         data-cy="FilterLinkActive"
-        onClick={() => handleFilterChenge('active')}
+        onClick={() => handleFilterChange('active')}
       >
         Active
       </a>
@@ -45,7 +43,7 @@ export const Footer: React.FC<FooterProps> = ({
         href="#/completed"
         className={`filter__link ${filter === 'completed' ? 'selected' : ''}`}
         data-cy="FilterLinkCompleted"
-        onClick={() => handleFilterChenge('completed')}
+        onClick={() => handleFilterChange('completed')}
       >
         Completed
       </a>
